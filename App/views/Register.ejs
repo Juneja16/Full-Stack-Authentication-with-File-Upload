@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Page</title>
+  </head>
+  <body>
+    <form action="/register" method="POST" enctype="multipart/form-data">
+      <fieldset>
+        <legend>Register Page</legend>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required />
+        <br />
+        <br />
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+        <br />
+        <br />
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+        <br />
+        <br />
+        <label for="File">Upload File:</label>
+        <input
+          type="file"
+          id="File"
+          name="file"
+          accept=".txt, .pdf, .docx .jpg .png .jpeg"
+          required
+        />
+        <br />
+        <br />
+        <button type="submit">Register</button>
+        <br />
+        <br />
+
+        <label for="login">Already have an account?</label>
+        <a href="/login"> Login here</a>
+      </fieldset>
+    </form>
+  </body>
+</html>
