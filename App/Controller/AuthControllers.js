@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import FullStackModel from "../Model/FullStackModel.js";
+import bcrypt from "bcryptjs";
 
 export const renderRegister = (req, res) => {
   res.render("Register", { url: null });
@@ -22,10 +23,12 @@ export const registerUser = async (req, res) => {
     const publicId = cloudinaryResponse.public_id;
     const filename = req.file.filename;
 
+    const hashpassword = await bcrypt.hash(password, 10);
+
     await FullStackModel.create({
       username,
       email,
-      password,
+      password: hashpassword,
       imageUrl,
       publicId,
       filename,
@@ -42,12 +45,10 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const myuser = await FullStackModel.findOne({
-      email: email,
-      password: password,
-    });
+    const myuser = await FullStackModel.findOne({ email });
+    const isPasswordValid = await bcrypt.compare(password, myuser.password);
 
-    if (myuser) {
+    if (myuser && isPasswordValid) {
       res.render("Profile", { myuser });
     } else {
       res.render("Login", { url: null, error: "Invalid credentials" });
