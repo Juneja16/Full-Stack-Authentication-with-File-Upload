@@ -13,36 +13,56 @@ export const renderLogin = (req, res) => {
 
 export const registerUser = async (req, res) => {
   try {
-    const filepath = req.file.path;
+    // Destructure file and form fields
+    const { filepath, filename } = req.file;
     const { username, email, password } = req.body;
 
-    const cloudinaryResponse = await cloudinary.uploader.upload(filepath, {
-      folder: "FULL STACK AUTHENTICATION WITH FILE uploads",
+    // Check if all fields are provided
+    if (!filepath || !username || !email || !password) {
+      return res
+        .status(400)
+        .render("Register", { url: null, error: "All fields are required" });
+    }
+
+    // Upload the file to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(filepath, {
+      folder: "User_Uploads",
     });
 
-    const imageUrl = cloudinaryResponse.secure_url;
-    const publicId = cloudinaryResponse.public_id;
-    const filename = req.file.filename;
+    // Extract required fields from the upload result
+    const imageUrl = uploadResult.secure_url; // Always use 'secure_url' for HTTPS
+    const publicId = uploadResult.public_id;
 
-    const hashpassword = await bcrypt.hash(password, 10);
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
+    const existingUser = await FullStackModel.findOne({ email });
+    if (existingUser) {
+      return res
+        .status(400)
+        .render("Register", { url: null, error: "Email already registered" });
+    }
+
+    // Save user data to database
     await FullStackModel.create({
       username,
       email,
-      password: hashpassword,
+      password: hashedPassword,
       imageUrl,
       publicId,
       filename,
     });
 
+    // Redirect user to login page
     res.redirect("/login");
   } catch (error) {
-    console.error(error);
-    res.render("Register", { url: null, error: "Registration failed" });
+    console.error("Registration Error:", error.message);
+    res.status(500).render("Register", {
+      url: null,
+      error: "Registration failed. Please try again.",
+    });
   }
 };
-
-// import cookieParser from "cookie-parser"; // make sure you have this middleware in your app.js
 
 export const loginUser = async (req, res) => {
   try {
