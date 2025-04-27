@@ -4,6 +4,7 @@ import path from "path";
 import { connectDB } from "./App/Config/database.js";
 import authRoutes from "./App/Routes/AuthRoutes.js";
 import { v2 as cloudinary } from "cloudinary";
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ const PORT = process.env.PORT || 5010;
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 // Set view engine
 app.set("view engine", "ejs");
