@@ -49,12 +49,25 @@ export const loginUser = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, myuser.password);
 
     if (myuser && isPasswordValid) {
-      res.render("Profile", { myuser });
+      res.redirect("/Profile");
     } else {
       res.render("Login", { url: null, error: "Invalid credentials" });
     }
   } catch (error) {
     console.error(error);
     res.render("Login", { url: null, error: "Login failed" });
+  }
+};
+
+export const profileView = async (req, res) => {
+  try {
+    console.log("Profile view request received");
+    const myuser = await FullStackModel.find({}).lean();
+    console.log(myuser);
+    const user = myuser[0];
+    res.render("Profile", { url: user.imageUrl, user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Server error");
   }
 };

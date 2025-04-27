@@ -1,6 +1,7 @@
 import express from "express";
 import {
   loginUser,
+  profileView,
   registerUser,
   renderLogin,
   renderRegister,
@@ -23,5 +24,5 @@ router.get("/", renderRegister);
 router.get("/login", renderLogin);
 router.post("/register", upload.single("file"), registerUser);
 router.post("/login", loginUser);
-
+router.get("/profile", profileView);
 export default router;
