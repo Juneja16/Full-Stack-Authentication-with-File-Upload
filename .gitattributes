@@ -1,0 +1,13 @@
+# Ensure JSON and lock files use LF
+*.json text eol=lf
+package-lock.json text eol=lf
+
+# Optional: Handle other file types
+*.js text eol=lf
+*.ts text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+
+# Windows-specific files can use CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf

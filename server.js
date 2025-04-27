@@ -22,6 +22,7 @@ const PORT = process.env.PORT || 5010;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.static(path.join(path.resolve(), "./public")));
 
 // Set view engine
 app.set("view engine", "ejs");
